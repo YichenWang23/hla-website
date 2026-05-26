@@ -824,6 +824,116 @@ h1, h2, h3 {
   color: var(--ink-soft);
 }
 
+/* === 通告详情页：徽章 === */
+.notice-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.notice-badge {
+  display: inline-block;
+  background: var(--red);
+  color: white;
+  font-size: 12px;
+  padding: 4px 14px;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+}
+
+.notice-id {
+  font-size: 13px;
+  color: var(--red-dark);
+  font-family: "Georgia", serif;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+/* === 通告详情页：分享区 === */
+.article-actions {
+  margin-top: 40px;
+  padding: 18px 24px;
+  background: var(--paper-warm);
+  border: 1px dashed var(--border-strong);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.action-share {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-label {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.share-btn {
+  padding: 7px 16px;
+  background: var(--gov-blue);
+  color: white;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+  letter-spacing: 0.05em;
+}
+
+.share-btn:hover {
+  background: var(--gov-blue-light);
+}
+
+.copy-tip {
+  font-size: 13px;
+  color: var(--gov-blue);
+  letter-spacing: 0.05em;
+  transition: opacity 0.3s;
+}
+
+/* === 通告详情页：相关通告 === */
+.related-notices {
+  margin-top: 30px;
+  padding: 24px 28px;
+  background: white;
+  border-left: 4px solid var(--gov-blue);
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.related-notices h3 {
+  font-size: 16px;
+  color: var(--gov-blue);
+  margin-bottom: 14px;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.related-notices ul {
+  list-style: none;
+}
+
+.related-notices li {
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.related-notices a {
+  color: var(--ink-soft);
+}
+
+.related-notices a:hover {
+  color: var(--red-dark);
+}
+
 /* === 公告列表页 === */
 .list-page {
   background: white;
