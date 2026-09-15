@@ -22,7 +22,7 @@
 | `services.html` | 办事服务：八项事项的办理对象、材料、时限与依据 |
 | `online-filing.html` | 在线备案：用工备案预填报表单（前端演示）+ 备案材料清单 |
 | `mailbox.html` | 局长信箱：来信须知、受理范围、办理时限 + 来信表单（前端演示） |
-| `mailbox-replies.html` | 办理进度查询：用受理编号查状态与答复；下方为经同意选登的答复公示 |
+| `mailbox-replies.html` | **互动交流**：已答复来信的公开选登（按咨询/建议/投诉筛选、分页、问答卡片）+ 凭受理编号的办理进度查询 |
 | `forms.html` | 表格与模板：可打印的三张表（备案登记表 / 从业声明 / 队伍名册） |
 | `search.html` | 站内检索：页面内置索引，支持关键词高亮与热门检索 |
 | `feed.xml` | 通告公示 RSS（订阅用） |
@@ -118,3 +118,18 @@ python -m http.server 8080
 不带工具也行：Cloudflare 控制台 → Storage & Databases → KV → `HLA_INBOX`，
 键名以 `sub:` 开头的就是提交记录，直接编辑其中的 `status` / `reply` / `replied_at` 即可。
 改完后，玩家用受理编号在"办理进度查询"页就能看到答复。
+
+### 互动交流栏目（公开问答）
+
+`mailbox-replies.html` 同时也是对外公开的问答栏目：它读 `/api/replies`，只展示
+**已答复 + 已标记公示**的来信（问与答），并自动剔除联系方式等个人信息；页面顶部有
+已答复/咨询/建议/投诉的计数，可按类型筛选、分页（每页 5 条）。
+
+要把某条来信选登上去：在收件箱里点「标记为可公示」，或用命令行
+`inbox.py reply <受理编号> --text "答复正文" --public`；玩家看到的公示区会立即更新。
+样板数据可以用工作区的 `seed_qa.py` 写入或清除：
+
+```powershell
+& 'F:\My-Project\ai-webui\.venv\Scripts\python.exe' F:\My-Project\构建区\site_tools\seed_qa.py          # 写入三条样板
+& 'F:\My-Project\ai-webui\.venv\Scripts\python.exe' F:\My-Project\构建区\site_tools\seed_qa.py --clear  # 删除它们
+```
