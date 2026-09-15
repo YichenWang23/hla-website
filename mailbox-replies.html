@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>办理进度查询 - 海特洛市劳动管理局</title>
+<title>互动交流 - 海特洛市劳动管理局</title>
 <meta name="description" content="用受理编号查询备案或来信的办理状态与答复正文，并查看经来信人同意后选登的答复公示。">
 <link rel="canonical" href="https://hla-website.pages.dev/mailbox-replies.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="海特洛市劳动管理局">
-<meta property="og:title" content="办理进度查询 - 海特洛市劳动管理局">
+<meta property="og:title" content="互动交流 - 海特洛市劳动管理局">
 <meta property="og:description" content="用受理编号查询备案或来信的办理状态与答复正文，并查看经来信人同意后选登的答复公示。">
 <meta property="og:url" content="https://hla-website.pages.dev/mailbox-replies.html">
 <meta property="og:image" content="https://hla-website.pages.dev/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="办理进度查询 - 海特洛市劳动管理局">
+<meta name="twitter:title" content="互动交流 - 海特洛市劳动管理局">
 <meta name="twitter:description" content="用受理编号查询备案或来信的办理状态与答复正文，并查看经来信人同意后选登的答复公示。">
 <meta name="twitter:image" content="https://hla-website.pages.dev/og-image.png">
 <link rel="alternate" type="application/rss+xml" title="通告公示 RSS" href="feed.xml">
@@ -61,8 +61,8 @@
       <li><a href="about.html">机构简介</a></li>
       <li><a href="services.html">办事服务</a></li>
       <li><a href="online-filing.html">在线备案</a></li>
-      <li class="active"><a href="mailbox.html">局长信箱</a></li>
-      <li><a href="mailbox-replies.html">互动交流</a></li>
+      <li><a href="mailbox.html">局长信箱</a></li>
+      <li class="active"><a href="mailbox-replies.html">互动交流</a></li>
     </ul>
   </div>
 </nav>
@@ -238,14 +238,22 @@ function renderPage() {
   try {
     const response = await fetch('/api/replies?v=' + Date.now());
     const body = await response.json();
+    if (!body.ok) throw new Error(body.message || 'api unavailable');
     renderReplies(body.items || []);
   } catch {
     try {
       const fallback = await fetch('data/replies.json?v=' + Date.now());
-      renderReplies(await fallback.json());
+      const items = await fallback.json();
+      if (items.length) { renderReplies(items); return; }
     } catch {
-      renderReplies([]);
+      /* 兜底数据也拿不到，走下面的提示 */
     }
+    // 接口不可用（例如访问的是镜像域名）：给出明确指引，而不是假装"暂无内容"
+    const isMirror = !/pages\.dev$/.test(location.hostname);
+    document.getElementById('qa-list').innerHTML = isMirror
+      ? '<p class="qa-empty">当前访问的是镜像地址（' + location.hostname +
+        '），互动数据只在主站可用，请前往 <a href="https://hla-website.pages.dev/mailbox-replies">hla-website.pages.dev</a> 查看。</p>'
+      : '<p class="qa-empty">答复数据暂时读取失败，请稍后刷新；你提交的来信仍会被正常受理与答复。</p>';
   }
 })();
 </script>
