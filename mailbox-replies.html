@@ -169,10 +169,16 @@ function renderReplies(items) {
     try { await queryStatus(preset, node); } catch {}
   }
   try {
-    const response = await fetch('data/replies.json?v=' + Date.now());
-    renderReplies(await response.json());
+    const response = await fetch('/api/replies?v=' + Date.now());
+    const body = await response.json();
+    renderReplies(body.items || []);
   } catch {
-    renderReplies([]);
+    try {
+      const fallback = await fetch('data/replies.json?v=' + Date.now());
+      renderReplies(await fallback.json());
+    } catch {
+      renderReplies([]);
+    }
   }
 })();
 </script>

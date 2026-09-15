@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>收件箱（管理端） - 海特洛市劳动管理局</title>
+<meta name="description" content="海特洛市劳动管理局收件箱管理端：查看在线备案与局长信箱来信、答复、公示与清理。">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: var(--paper-warm); }
+  .admin-shell { max-width: 1180px; margin: 24px auto 60px; padding: 0 18px; }
+  .admin-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    background: var(--gov-blue); color: #fff; padding: 16px 20px; border-bottom: 3px solid var(--gold); }
+  .admin-head h1 { font-size: 18px; letter-spacing: 0.08em; margin: 0; }
+  .admin-head .hint { font-size: 12.5px; opacity: 0.85; }
+  .admin-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 18px 0 12px; }
+  .admin-bar button, .admin-bar a.btn { padding: 8px 16px; border: 1px solid var(--gov-blue); background: #fff;
+    color: var(--gov-blue); font: inherit; font-size: 13.5px; cursor: pointer; text-decoration: none; }
+  .admin-bar button.active { background: var(--gov-blue); color: #fff; }
+  .admin-stats { margin-left: auto; font-size: 13px; color: var(--ink-soft); }
+  .admin-layout { display: grid; grid-template-columns: 380px 1fr; gap: 18px; align-items: start; }
+  .admin-list { background: #fff; border: 1px solid var(--border); max-height: 70vh; overflow: auto; }
+  .admin-item { padding: 12px 14px; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .admin-item:hover { background: var(--paper); }
+  .admin-item.active { background: #eef3fb; border-left: 4px solid var(--gov-blue); }
+  .admin-item .row1 { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-mute); }
+  .admin-item .row2 { font-size: 14px; margin: 4px 0; color: var(--ink); }
+  .admin-item .row3 { font-size: 12.5px; color: var(--ink-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tag { display: inline-block; padding: 1px 7px; font-size: 11.5px; border: 1px solid currentColor; margin-right: 6px; }
+  .tag-new { color: var(--red); }
+  .tag-done { color: #2f7d4f; }
+  .tag-pub { color: var(--gov-blue); }
+  .admin-detail { background: #fff; border: 1px solid var(--border); padding: 18px 20px; min-height: 320px; }
+  .admin-detail h2 { font-size: 17px; color: var(--gov-blue); margin: 0 0 10px; }
+  .admin-detail dl { display: grid; grid-template-columns: 96px 1fr; gap: 6px 12px; font-size: 13.5px; margin: 0 0 14px; }
+  .admin-detail dt { color: var(--ink-mute); }
+  .admin-detail dd { margin: 0; }
+  .admin-detail textarea { width: 100%; min-height: 132px; padding: 10px; font: inherit; font-size: 13.5px;
+    border: 1px solid var(--border-strong); background: var(--paper); }
+  .admin-detail .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .admin-detail .actions button { padding: 9px 18px; border: none; font: inherit; font-size: 13.5px; cursor: pointer; }
+  .btn-save { background: var(--gov-blue); color: #fff; }
+  .btn-ghost { background: #fff; border: 1px solid var(--border-strong); color: var(--ink-soft); }
+  .btn-danger { background: #fff; border: 1px solid var(--red); color: var(--red); }
+  .admin-msg { margin-top: 10px; font-size: 13px; color: var(--ink-soft); }
+  .admin-login { background: #fff; border: 1px solid var(--border); padding: 26px; max-width: 520px; }
+  .admin-login input { width: 100%; padding: 10px 12px; font: inherit; font-size: 14px; border: 1px solid var(--border-strong); }
+  @media (max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="admin-head">
+  <h1>海特洛市劳动管理局 · 收件箱（管理端）</h1>
+  <span class="hint">此页不进入站内检索与站点地图</span>
+</div>
+
+<div class="admin-shell">
+  <div id="login-box" class="admin-login" hidden>
+    <p style="margin-top:0;font-size:13.5px;color:var(--ink-soft);">
+      请粘贴管理口令（由本机 <code>inbox.py token</code> 生成，只显示一次）。口令只保存在本机浏览器里，
+      不会出现在网址栏或服务器日志里。</p>
+    <input id="token-input" type="password" placeholder="管理口令" autocomplete="off">
+    <div class="actions" style="margin-top:12px;">
+      <button class="btn-save" id="token-save">进入收件箱</button>
+    </div>
+    <div class="admin-msg" id="login-msg"></div>
+  </div>
+
+  <div id="inbox-box" hidden>
+    <div class="admin-bar">
+      <button data-filter="all" class="active">全部</button>
+      <button data-filter="received">待办理</button>
+      <button data-filter="replied">已答复</button>
+      <button data-filter="filing">备案</button>
+      <button data-filter="mailbox">来信</button>
+      <button id="refresh">刷新</button>
+      <button id="forget">清除口令</button>
+      <span class="admin-stats" id="stats"></span>
+    </div>
+    <div class="admin-layout">
+      <div class="admin-list" id="list"></div>
+      <div class="admin-detail" id="detail">
+        <p style="color:var(--ink-mute);font-size:13.5px;">← 从左边选一条来信或备案</p>
+      </div>
+    </div>
+    <div class="admin-msg" id="msg"></div>
+  </div>
+</div>
+
+<script>
+const TOKEN_KEY = 'hla-admin-token';
+let token = localStorage.getItem(TOKEN_KEY) || '';
+let records = [];
+let current = null;
+let filter = 'all';
+
+const $ = (id) => document.getElementById(id);
+const esc = (text) => String(text ?? '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+
+function statusLabel(status) {
+  return { received: '待办理', processing: '办理中', replied: '已答复', closed: '已办结' }[status] || status;
+}
+
+async function api(path, options = {}) {
+  const response = await fetch(path, {
+    ...options,
+    headers: { 'content-type': 'application/json', 'x-admin-token': token, ...(options.headers || {}) },
+  });
+  const body = await response.json().catch(() => ({}));
+  return { status: response.status, body };
+}
+
+function renderList() {
+  const items = records.filter((item) => {
+    if (filter === 'all') return true;
+    if (filter === 'filing' || filter === 'mailbox') return item.kind === filter;
+    return item.status === filter;
+  });
+  $('stats').textContent = `共 ${records.length} 条 · 待办理 ${records.filter((r) => r.status === 'received').length} 条 · 当前显示 ${items.length} 条`;
+  $('list').innerHTML = items.length
+    ? items.map((item) => {
+        const fields = item.fields || {};
+        const title = fields.title || fields.unit || '（无标题）';
+        const snippet = fields.body || fields.note || fields.address || '';
+        return `<div class="admin-item${current && current.id === item.id ? ' active' : ''}" data-id="${item.id}">
+          <div class="row1"><span>${item.kind === 'filing' ? '备案' : '来信'} · ${item.id}</span><span>${(item.created_at || '').slice(0, 16).replace('T', ' ')}</span></div>
+          <div class="row2"><span class="tag ${item.status === 'replied' ? 'tag-done' : 'tag-new'}">${statusLabel(item.status)}</span>${item.public ? '<span class="tag tag-pub">已公示</span>' : ''}${esc(title)}</div>
+          <div class="row3">${esc(snippet).slice(0, 60)}</div>
+        </div>`;
+      }).join('')
+    : '<div class="admin-item" style="cursor:default;color:var(--ink-mute)">没有符合条件的记录</div>';
+  document.querySelectorAll('.admin-item[data-id]').forEach((node) => {
+    node.addEventListener('click', () => showDetail(records.find((item) => item.id === node.dataset.id)));
+  });
+}
+
+function showDetail(record) {
+  if (!record) return;
+  current = record;
+  const fields = record.fields || {};
+  const rows = Object.entries(fields).filter(([, value]) => value !== '' && value !== false)
+    .map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value === true ? '是' : value)}</dd>`).join('');
+  $('detail').innerHTML = `
+    <h2>${record.kind === 'filing' ? '在线备案' : '局长信箱'} · ${esc(fields.title || fields.unit || '')}</h2>
+    <dl>
+      <dt>受理编号</dt><dd><code>${record.id}</code></dd>
+      <dt>状态</dt><dd>${statusLabel(record.status)}${record.public ? ' · 已公示' : ''}</dd>
+      <dt>受理时间</dt><dd>${(record.created_at || '').replace('T', ' ').slice(0, 16)}</dd>
+      ${record.replied_at ? `<dt>答复时间</dt><dd>${record.replied_at.replace('T', ' ').slice(0, 16)}</dd>` : ''}
+      ${rows}
+    </dl>
+    <label style="font-size:13.5px;color:var(--ink-soft)">答复正文</label>
+    <textarea id="reply-text" placeholder="写给来信人的答复，会显示在办理进度查询页">${esc(record.reply || '')}</textarea>
+    <div class="actions">
+      <button class="btn-save" id="save-reply">保存并答复</button>
+      <button class="btn-ghost" id="toggle-public">${record.public ? '取消公示' : '标记为可公示'}</button>
+      <button class="btn-ghost" id="mark-processing">标记办理中</button>
+      <button class="btn-danger" id="delete-item">删除</button>
+    </div>
+    <div class="admin-msg" id="detail-msg"></div>`;
+
+  $('save-reply').addEventListener('click', () => act('reply', { text: $('reply-text').value }));
+  $('toggle-public').addEventListener('click', () => act('public', { value: !record.public }));
+  $('mark-processing').addEventListener('click', () => act('status', { state: 'processing' }));
+  $('delete-item').addEventListener('click', () => {
+    if (confirm('确定删除 ' + record.id + '？删除后不可恢复。')) act('delete', {});
+  });
+  renderList();
+}
+
+async function act(action, extra) {
+  $('detail-msg').textContent = '提交中…';
+  const { status, body } = await api('/api/admin', {
+    method: 'POST',
+    body: JSON.stringify({ action, id: current.id, ...extra }),
+  });
+  if (status === 200 && body.ok) {
+    $('detail-msg').textContent = action === 'delete' ? '已删除' : '已保存';
+    await load();
+    if (action !== 'delete') showDetail(records.find((item) => item.id === current.id));
+    else $('detail').innerHTML = '<p style="color:var(--ink-mute);font-size:13.5px;">已删除，从左边选另一条。</p>';
+  } else {
+    $('detail-msg').textContent = body.message || '操作失败';
+  }
+}
+
+async function load() {
+  const { status, body } = await api('/api/admin');
+  if (status === 200 && body.ok) {
+    records = body.records || [];
+    $('inbox-box').hidden = false;
+    $('login-box').hidden = true;
+    renderList();
+    return true;
+  }
+  if (status === 401) {
+    localStorage.removeItem(TOKEN_KEY);
+    token = '';
+    $('login-box').hidden = false;
+    $('inbox-box').hidden = true;
+    $('login-msg').textContent = '口令不正确或已失效，请重新输入。';
+    return false;
+  }
+  $('inbox-box').hidden = false;
+  $('login-box').hidden = true;
+  $('msg').textContent = body.message || '读取失败';
+  return false;
+}
+
+$('token-save').addEventListener('click', async () => {
+  token = $('token-input').value.trim();
+  if (!token) { $('login-msg').textContent = '请输入口令。'; return; }
+  localStorage.setItem(TOKEN_KEY, token);
+  await load();
+});
+
+$('refresh').addEventListener('click', load);
+$('forget').addEventListener('click', () => {
+  localStorage.removeItem(TOKEN_KEY);
+  token = '';
+  $('login-box').hidden = false;
+  $('inbox-box').hidden = true;
+});
+
+document.querySelectorAll('.admin-bar [data-filter]').forEach((button) => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.admin-bar [data-filter]').forEach((other) => other.classList.remove('active'));
+    button.classList.add('active');
+    filter = button.dataset.filter;
+    renderList();
+  });
+});
+
+(async function () {
+  const hash = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const fromHash = hash.get('t');
+  if (fromHash) {
+    token = fromHash.trim();
+    localStorage.setItem(TOKEN_KEY, token);
+    history.replaceState(null, '', location.pathname);  // 口令不留在地址栏/历史里
+  }
+  if (!token) {
+    $('login-box').hidden = false;
+    return;
+  }
+  await load();
+})();
+</script>
+</body>
+</html>
