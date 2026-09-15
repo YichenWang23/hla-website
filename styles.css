@@ -1067,3 +1067,137 @@ h1, h2, h3 {
     text-align: left;
   }
 }
+
+/* ============== 表单（在线备案 / 局长信箱） ============== */
+.site-form { margin-top: 18px; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 22px;
+}
+
+.form-row { display: flex; flex-direction: column; gap: 6px; }
+.form-row-wide { grid-column: 1 / -1; }
+.form-row label { font-size: 13.5px; color: var(--ink-soft); }
+.form-row .req { color: var(--red); }
+
+.site-form input[type="text"],
+.site-form input[type="tel"],
+.site-form input[type="number"],
+.site-form select,
+.site-form textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--paper);
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.site-form input:focus,
+.site-form select:focus,
+.site-form textarea:focus {
+  outline: none;
+  border-color: var(--gov-blue);
+  box-shadow: 0 0 0 2px rgba(13, 45, 94, 0.12);
+}
+
+.check-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.check-row label { display: flex; align-items: center; gap: 6px; }
+
+.form-actions { display: flex; gap: 12px; margin-top: 20px; }
+
+.btn-primary {
+  padding: 10px 24px;
+  background: var(--gov-blue);
+  color: #fff;
+  border: none;
+  font: inherit;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover { background: var(--gov-blue-light); }
+
+.btn-plain {
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-plain:hover { border-color: var(--gov-blue); color: var(--gov-blue); }
+
+.form-note {
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  line-height: 1.8;
+}
+
+.form-result {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-strong);
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+.form-result-ok { background: #f3f7f3; border-left: 4px solid #2f7d4f; }
+.form-result-bad { background: #fdf5f5; border-left: 4px solid var(--red); }
+.form-result code { font-family: "Georgia", serif; font-weight: 700; color: var(--gov-blue); }
+
+/* ============== 站内检索 ============== */
+.search-page-form { display: flex; margin: 18px 0 6px; }
+
+.search-page-form input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid var(--gov-blue);
+  border-right: none;
+  font: inherit;
+  font-size: 14px;
+}
+
+.search-page-form button {
+  padding: 11px 26px;
+  background: var(--gov-blue);
+  color: #fff;
+  border: none;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.search-page-form button:hover { background: var(--gov-blue-light); }
+
+.list-items li.search-hit { display: block; padding: 13px 0; }
+
+.search-hit .item-title { font-size: 15px; }
+
+.search-hit .hit-summary {
+  display: block;
+  margin-top: 5px;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+
+mark { background: rgba(201, 169, 97, 0.35); color: inherit; padding: 0 2px; }
+
+@media (max-width: 900px) {
+  .form-grid { grid-template-columns: 1fr; }
+}

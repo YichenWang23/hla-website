@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>站内检索 - 海特洛市劳动管理局</title>
+<meta name="description" content="站内检索：在通告、办事事项与政策法规中查找关键词。">
+<link rel="canonical" href="https://hla-website.pages.dev/search.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="海特洛市劳动管理局">
+<meta property="og:title" content="站内检索 - 海特洛市劳动管理局">
+<meta property="og:description" content="站内检索：在通告、办事事项与政策法规中查找关键词。">
+<meta property="og:url" content="https://hla-website.pages.dev/search.html">
+<meta property="og:image" content="https://hla-website.pages.dev/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="站内检索 - 海特洛市劳动管理局">
+<meta name="twitter:description" content="站内检索：在通告、办事事项与政策法规中查找关键词。">
+<meta name="twitter:image" content="https://hla-website.pages.dev/og-image.png">
+<link rel="alternate" type="application/rss+xml" title="通告公示 RSS" href="feed.xml">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="top-strip">
+  <div class="container">
+    <span>⚠ 本站为《异环》游戏同人二创内容 · 海特洛市为虚构城市 · 本机构为玩家自创设定 · 与任何现实政府机构无关</span>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header-flex">
+    <div class="emblem-wrap">
+      <div class="emblem"><img src="logo-512.jpg" alt="海特洛市劳动管理局 徽章" width="512" height="512" decoding="async"></div>
+      <div class="title-block">
+        <div class="cn-title">海特洛市劳动管理局</div>
+        <div class="en-title">HYTHELLO LABOR ADMINISTRATION</div>
+        <div class="sub-line">依法承担本市就业促进、用工登记及劳动事务管理工作</div>
+      </div>
+    </div>
+    <div class="search-block">
+      <form class="search-box" action="search.html" method="get">
+        <input type="text" name="q" placeholder="请输入关键词检索本站内容" aria-label="站内检索">
+        <button type="submit">检索</button>
+      </form>
+      <div class="quick-links">
+        <a href="#" title="建设中">繁體</a><span>·</span><a href="#" title="建设中">English</a><span>·</span><a href="about.html">无障碍</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="main-nav">
+  <div class="container">
+    <ul>
+      <li><a href="index.html">首&nbsp;&nbsp;页</a></li>
+      <li><a href="announcements.html">通告公示</a></li>
+      <li><a href="regulations.html">政策法规</a></li>
+      <li><a href="about.html">机构简介</a></li>
+      <li><a href="services.html">办事服务</a></li>
+      <li><a href="online-filing.html">在线备案</a></li>
+      <li><a href="mailbox.html">局长信箱</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="list-page">
+  <h1 class="page-title">站内检索</h1>
+  <form class="search-page-form" action="search.html" method="get">
+    <input type="text" name="q" id="q" placeholder="输入关键词，例如：泊暮区、最低报酬、异质接触" aria-label="检索关键词">
+    <button type="submit">检索</button>
+  </form>
+  <p class="reg-excerpt" id="search-summary">在站内检索通告、办事事项与政策法规。</p>
+  <ul class="list-items" id="search-results"></ul>
+  <div class="links-section">
+    <h2>热门检索</h2>
+    <div class="links-row">
+      <a href="search.html?q=泊暮区">泊暮区</a>
+      <a href="search.html?q=用工备案">用工备案</a>
+      <a href="search.html?q=异质接触">异质接触</a>
+      <a href="search.html?q=最低报酬">最低报酬</a>
+      <a href="search.html?q=维特海默">维特海默值</a>
+      <a href="search.html?q=投诉">投诉渠道</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const INDEX = [
+  [
+    "index.html",
+    "首页",
+    "本局要闻、通告公示、办事入口与紧急公告",
+    "首页 要闻 通告 办事"
+  ],
+  [
+    "announcements.html",
+    "通告公示",
+    "全部通告与政策文件列表（含文号与日期）",
+    "通告 公示 列表 文号 劳社字"
+  ],
+  [
+    "notice-2026-003.html",
+    "开展「泊暮区」新设经营场所用工备案集中办理工作（No.2026-003）",
+    "泊暮区临时服务点、季节性用工规范、异质接触岗位声明、最低报酬与违规处理",
+    "泊暮区 星沉湾 泪湖 备案 集中办理 夜班 津贴"
+  ],
+  [
+    "notice-2026-013.html",
+    "海特洛市委托作业最低报酬指导价（2026年度）（劳社字〔2026〕13号）",
+    "五类岗位指导价、加成与发放要求",
+    "最低报酬 指导价 方斯 委托作业 夜班 加成"
+  ],
+  [
+    "notice-2026-002.html",
+    "调查「一咖舍·ORIGEN」用工备案情况（No.2026-002）",
+    "用工备案稽查科现场核查、材料清单与异质接触岗位要求",
+    "调查 核查 一咖舍 ORIGEN 稽查"
+  ],
+  [
+    "notice-2026-001.html",
+    "海特洛市劳动管理局新媒体账号入驻公告（No.2026-001）",
+    "官方账号认证标识、投稿与咨询渠道、谨防冒充",
+    "抖音 小红书 新媒体 认证 冒充"
+  ],
+  [
+    "services.html",
+    "办事服务",
+    "八项常用事项的办理对象、材料、时限与依据",
+    "办事 材料 时限 事项 工伤 保障卡 调解 灵活用工"
+  ],
+  [
+    "online-filing.html",
+    "在线备案",
+    "用工备案预填报表单与备案材料清单",
+    "在线备案 表单 预填报 受理编号 材料清单"
+  ],
+  [
+    "mailbox.html",
+    "局长信箱",
+    "来信须知、受理范围、办理时限与来信表单",
+    "信箱 建议 投诉 咨询 受理 时限"
+  ],
+  [
+    "regulations.html",
+    "政策法规",
+    "《海特洛市劳动事务管理条例》与第17号补充条例全文要点",
+    "法规 条例 补充条例 异质接触 维特海默 条文"
+  ],
+  [
+    "about.html",
+    "机构简介",
+    "本局职能、七个科室分工与办公信息",
+    "机构 科室 职能 办公 地址 电话"
+  ]
+];
+
+function render(query) {
+  const q = (query || '').trim().toLowerCase();
+  const results = document.getElementById('search-results');
+  const summary = document.getElementById('search-summary');
+  results.innerHTML = '';
+  if (!q) { summary.textContent = '在站内检索通告、办事事项与政策法规。'; return; }
+  const hits = INDEX.filter(item => [item[1], item[2], item[3]].join(' ').toLowerCase().includes(q));
+  summary.textContent = '关键词「' + query + '」共命中 ' + hits.length + ' 项。';
+  if (!hits.length) {
+    summary.textContent += ' 试试更短的关键词，或从下面的热门检索进入。';
+    return;
+  }
+  hits.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'search-hit';
+    li.innerHTML = '<a class="item-title" href="' + item[0] + '">' +
+      item[1].replace(new RegExp(query, 'gi'), m => '<mark>' + m + '</mark>') + '</a>' +
+      '<span class="hit-summary">' + item[2] + '</span>';
+    results.appendChild(li);
+  });
+}
+
+const params = new URLSearchParams(location.search);
+const query = params.get('q') || '';
+document.getElementById('q').value = query;
+render(query);
+</script>
+
+<footer class="site-footer">
+  <div class="container footer-flex">
+    <div class="footer-left">
+      <div class="footer-title">海特洛市劳动管理局</div>
+      <div class="footer-en">HYTHELLO LABOR ADMINISTRATION</div>
+      <div class="footer-info">
+        地址：海特洛市中央区第三行政广场 17 号<br>
+        办公时间：周一至周五 09:00 - 17:00<br>
+        咨询电话：12333-HLA &nbsp;|&nbsp; 邮箱：service@hla.hytheloo
+      </div>
+    </div>
+    <div class="footer-right">
+      <div class="seal-mini">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="93" fill="none" stroke="#c44848" stroke-width="4"/>
+          <circle cx="100" cy="100" r="83" fill="none" stroke="#c44848" stroke-width="1"/>
+          <polygon points="100,80 105.88,98.09 124.9,98.09 109.51,109.27 115.39,127.36 100,116.18 84.61,127.36 90.49,109.27 75.1,98.09 94.12,98.09" fill="#c44848"/>
+          <text x="100" y="148" text-anchor="middle" font-size="11" font-weight="bold" fill="#c44848" font-family="serif" letter-spacing="2">电 子 印 章</text>
+          <text x="100" y="165" text-anchor="middle" font-size="8" fill="#c44848" font-family="Georgia, serif">HLA-WEB</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <span>© 2026 海特洛市劳动管理局 · 玩家二创设定 · 与现实任何机构无关</span>
+      <span>· 本站为《异环》游戏同人作品 ·</span>
+      <span><a href="feed.xml">通告 RSS</a> · 归档号：HLA-2026-WEB</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
