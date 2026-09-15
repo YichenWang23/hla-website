@@ -5,7 +5,7 @@
 
 一个纯静态的"政务网站"：5 个正式页面 + 404 页，无构建步骤、无依赖，直接把 HTML 丢到任意静态托管即可。
 
-线上地址：<https://hla-website-cyan.vercel.app>
+线上地址：<https://hla-website.pages.dev>
 
 ## 页面
 
