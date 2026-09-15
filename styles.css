@@ -1201,3 +1201,88 @@ mark { background: rgba(201, 169, 97, 0.35); color: inherit; padding: 0 2px; }
 @media (max-width: 900px) {
   .form-grid { grid-template-columns: 1fr; }
 }
+
+/* ============== 可打印表格（表格与模板） ============== */
+.doc-title {
+  text-align: center;
+  font-size: 19px;
+  color: var(--gov-blue);
+  letter-spacing: 0.12em;
+  margin: 30px 0 4px;
+  font-weight: 700;
+}
+
+.doc-meta {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 22px;
+  font-size: 13.5px;
+}
+
+.doc-table th,
+.doc-table td {
+  border: 1px solid var(--border-strong);
+  padding: 8px 10px;
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+.doc-table th {
+  background: var(--paper-warm);
+  color: var(--gov-blue);
+  font-weight: 700;
+  text-align: left;
+  width: 148px;
+}
+
+.doc-note {
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  line-height: 1.9;
+  margin-top: 8px;
+}
+
+/* 蜜罐字段：真人不可见，机器人会填 */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-result a { color: var(--gov-blue); text-decoration: underline; }
+
+@media print {
+  .top-strip,
+  .site-header,
+  .main-nav,
+  .site-footer,
+  .form-actions,
+  .links-section,
+  .breadcrumb,
+  .section-head,
+  .list-page .page-title,
+  .list-page .reg-excerpt {
+    display: none !important;
+  }
+
+  body { background: #fff; }
+
+  .list-page {
+    border: none;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+
+  .doc-table { page-break-inside: avoid; }
+  .doc-table th { background: #f2f2f2 !important; }
+}

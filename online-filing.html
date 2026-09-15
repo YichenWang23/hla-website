@@ -128,12 +128,17 @@
       <textarea id="note" name="note" rows="3" placeholder="可填写用工起始日期、委托作业队伍名称等"></textarea>
     </div>
   </div>
+  <div class="hp-field" aria-hidden="true">
+    <label for="filing-website">网址</label>
+    <input id="filing-website" name="website" type="text" tabindex="-1" autocomplete="off">
+  </div>
   <div class="form-actions">
     <button type="submit" class="btn-primary">提交预填报</button>
     <button type="reset" class="btn-plain">清空</button>
   </div>
-  <p class="form-note">本站为同人二创演示，表单不会向任何真实系统提交，也不会保存你填写的内容；
-  提交后仅在本机生成一个受理编号示例。正式办理请携带材料前往办事大厅或泊暮区临时服务点。</p>
+  <p class="form-note">提交后本局受理系统会生成受理编号，请记下编号：可凭它在
+  <a href="mailbox-replies.html">办理进度查询</a>页查看状态与答复。
+  正式办理仍需携带材料原件前往办事大厅或泊暮区临时服务点核验。</p>
 </form>
 
 <div class="form-result" id="filing-result" hidden></div>
@@ -151,24 +156,54 @@
 </div>
 
 <script>
-document.getElementById('filing-form').addEventListener('submit', function (event) {
+
+async function submitToInbox(kind, form) {
+  const fields = {};
+  new FormData(form).forEach((value, key) => { fields[key] = typeof value === 'string' ? value.trim() : value; });
+  const response = await fetch('/api/submit', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ kind, fields }),
+  });
+  return { status: response.status, body: await response.json().catch(() => ({})) };
+}
+
+function showResult(node, ok, html) {
+  node.hidden = false;
+  node.className = 'form-result ' + (ok ? 'form-result-ok' : 'form-result-bad');
+  node.innerHTML = html;
+}
+
+document.getElementById('filing-form').addEventListener('submit', async function (event) {
   event.preventDefault();
   const form = event.target;
+  const button = form.querySelector('button[type=submit]');
   const required = ['unit', 'district', 'address', 'contact', 'phone', 'headcount'];
   const missing = required.filter(id => !form.elements[id].value.trim());
   const result = document.getElementById('filing-result');
-  result.hidden = false;
   if (missing.length) {
-    result.className = 'form-result form-result-bad';
-    result.innerHTML = '请先补全下列必填项：' + missing.map(id => form.elements[id].previousElementSibling.textContent.replace('*', '').trim()).join('、');
+    showResult(result, false, '请先补全下列必填项：' +
+      missing.map(id => form.elements[id].previousElementSibling.textContent.replace('*', '').trim()).join('、'));
     return;
   }
-  const serial = 'HLA-2026-' + Math.random().toString(36).slice(2, 8).toUpperCase();
-  result.className = 'form-result form-result-ok';
-  result.innerHTML = '<strong>预填报已生成（演示）</strong><br>受理编号：<code>' + serial + '</code><br>' +
-    '请于 15 日内携带下列材料到服务点核验原件：劳动合同正本、经营登记证明、从业人员身份证明' +
-    (form.elements['post'].value === '异质接触岗位' ? '、岗位从业声明' : '') + '。';
-  form.reset();
+  button.disabled = true;
+  button.textContent = '提交中…';
+  try {
+    const { status, body } = await submitToInbox('filing', form);
+    if (status === 200 && body.ok) {
+      showResult(result, true, '<strong>预填报已受理</strong><br>受理编号：<code>' + body.id + '</code><br>' +
+        body.message + '<br>可前往 <a href="mailbox-replies.html?id=' + body.id + '">办理进度查询</a> 查看状态与答复。');
+      form.reset();
+    } else {
+      showResult(result, false, '<strong>未能受理</strong><br>' + (body.message || '请稍后再试。') +
+        '<br>也可拨打电话 12333-HLA 或前往泊暮区临时服务点现场办理。');
+    }
+  } catch (error) {
+    showResult(result, false, '<strong>网络异常</strong><br>请检查网络后重试，或拨打电话 12333-HLA。');
+  } finally {
+    button.disabled = false;
+    button.textContent = '提交预填报';
+  }
 });
 </script>
 
