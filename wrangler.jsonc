@@ -1,0 +1,14 @@
+{
+  // Cloudflare Pages 项目配置：Git 构建会读取这里的绑定
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hla-website",
+  "compatibility_date": "2026-09-15",
+  "pages_build_output_dir": ".",
+  "kv_namespaces": [
+    {
+      // functions/api/submit.js 与 status.js 通过 env.INBOX 读写这个命名空间
+      "binding": "INBOX",
+      "id": "b02b1c29431c48d190e0239797111014"
+    }
+  ]
+}
