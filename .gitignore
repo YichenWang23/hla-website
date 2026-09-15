@@ -1,0 +1,10 @@
+# 系统 / 编辑器杂项
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+
+# 本地预览与导出
+*.tmp
+*.bak
+.vscode/
