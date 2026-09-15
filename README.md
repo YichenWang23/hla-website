@@ -95,19 +95,26 @@ python -m http.server 8080
 按来源 IP 限流（10 分钟 6 次）、不存 IP 明文（只存哈希前 6 字节）、KV 不可用时返回 503
 并提示改走电话/邮箱，**绝不假装受理成功**。
 
-**启用收件箱只差一步**（需要你的 Cloudflare 账号）：
-1. 在 Pages 项目里建一个 Workers KV 命名空间，名字随意（例如 `HLA_INBOX`）；
-2. 项目 Settings → Functions → KV namespace bindings，把它绑定为变量名 **`INBOX`**；
-3. 可选：加一个环境变量 `NOTIFY_WEBHOOK`，填你的飞书/企业微信/Discord 机器人地址，新件会即时推给你；
-4. 重新部署一次（改任意文件 push 即可，绑定改完也可以直接 Redeploy）。
+**2026-09-15 已启用**：KV 命名空间 `HLA_INBOX`（id `b02b1c29431c48d190e0239797111014`）已创建，
+并通过仓库里的 `wrangler.jsonc` 绑定为函数环境变量 **`INBOX`**（Git 构建会读这份配置）。
+可选还有 `NOTIFY_WEBHOOK`（环境变量），填群机器人地址后新件会即时推送——目前未配置。
 
 绑定之前，接口会返回 503 并提示"受理系统尚未启用，请拨打 12333-HLA 或使用邮箱"——
 即玩家不会看到"提交成功"这种假象。
 
 ### 我们怎么读件、怎么答复
 
-1. 读件：Cloudflare 控制台 → Storage & Databases → KV → `HLA_INBOX`，键名以 `sub:` 开头的就是提交记录；
-   或本地 `npx wrangler kv key list --namespace-id <id> --prefix "sub:"`。
-2. 答复：把该键的值里 `status` 改成 `"replied"`、`reply` 写上答复正文、`replied_at` 填时间
-   （`npx wrangler kv key put` 或控制台直接编辑）。改完后，玩家用受理编号在"办理进度查询"页就能看到答复。
-3. 选登：把问与答整理进 `data/replies.json` 并提交，就会出现在答复公示区（先取得来信人同意）。
+本机有个小工具（在工作区 `构建区\site_tools\inbox.py`，不在本仓库里）：
+
+```powershell
+& 'F:\My-Project\ai-webui\.venv\Scripts\python.exe' F:\My-Project\构建区\site_tools\inbox.py list
+& ... inbox.py show HLA-MB-XXXXXX
+& ... inbox.py reply HLA-MB-XXXXXX --text "答复正文" [--public]
+& ... inbox.py status HLA-MB-XXXXXX processing
+& ... inbox.py publish        # 把 --public 的答复汇总进 data/replies.json
+& ... inbox.py delete HLA-MB-XXXXXX
+```
+
+不带工具也行：Cloudflare 控制台 → Storage & Databases → KV → `HLA_INBOX`，
+键名以 `sub:` 开头的就是提交记录，直接编辑其中的 `status` / `reply` / `replied_at` 即可。
+改完后，玩家用受理编号在"办理进度查询"页就能看到答复。
