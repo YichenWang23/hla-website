@@ -22,6 +22,8 @@
 | `services.html` | 办事服务：八项事项的办理对象、材料、时限与依据 |
 | `online-filing.html` | 在线备案：用工备案预填报表单（前端演示）+ 备案材料清单 |
 | `mailbox.html` | 局长信箱：来信须知、受理范围、办理时限 + 来信表单（前端演示） |
+| `mailbox-replies.html` | 办理进度查询：用受理编号查状态与答复；下方为经同意选登的答复公示 |
+| `forms.html` | 表格与模板：可打印的三张表（备案登记表 / 从业声明 / 队伍名册） |
 | `search.html` | 站内检索：页面内置索引，支持关键词高亮与热门检索 |
 | `feed.xml` | 通告公示 RSS（订阅用） |
 | `404.html` | 页面不存在（Vercel 会自动使用根目录的 `404.html`） |
@@ -76,6 +78,36 @@ python -m http.server 8080
 - 二创声明在每一页的顶部窄条与页脚都有，新增页面时请一并保留。
 - 站内检索的索引写在 `search.html` 底部脚本的 `INDEX` 数组里（`[文件, 标题, 摘要, 关键词]`），**新增页面后要手动补一条**，
   否则搜不到。
-- `online-filing.html` 与 `mailbox.html` 的表单是纯前端演示：只做必填校验、在本机生成一个受理编号示例，
-  不会向任何服务器提交，也不会保存填写内容。若将来要真接入系统，需要另配后端。
 - 顶部搜索框在每一页都是同一段 `<form class="search-box" action="search.html">`，改的时候记得全站一起改。
+
+## 在线备案与局长信箱（真的能收到）
+
+这两个表单**不是**演示，是真的会落到本局收件箱：
+
+| 部分 | 文件 | 作用 |
+| --- | --- | --- |
+| 受理接口 | `functions/api/submit.js` | 接收两类提交（`filing` / `mailbox`），校验、限流、落库、返回受理编号；配了 `NOTIFY_WEBHOOK` 时还会把新件转发到你的群机器人/邮件网关 |
+| 进度查询 | `functions/api/status.js` | `GET /api/status?id=HLA-MB-XXXXXX`，只回该编号的状态与答复正文，不回显提交内容 |
+| 收件箱 | KV 命名空间绑定 `INBOX` | 每条记录键为 `sub:<受理编号>`，值含提交内容、时间、状态、答复 |
+| 答复公示 | `data/replies.json` | 选登的问答（问 + 答 + 日期），页面直接读取；空数组也没问题 |
+
+**已内置的防护**：字段白名单与长度上限、蜜罐字段（机器人填了就假装成功但不落库）、
+按来源 IP 限流（10 分钟 6 次）、不存 IP 明文（只存哈希前 6 字节）、KV 不可用时返回 503
+并提示改走电话/邮箱，**绝不假装受理成功**。
+
+**启用收件箱只差一步**（需要你的 Cloudflare 账号）：
+1. 在 Pages 项目里建一个 Workers KV 命名空间，名字随意（例如 `HLA_INBOX`）；
+2. 项目 Settings → Functions → KV namespace bindings，把它绑定为变量名 **`INBOX`**；
+3. 可选：加一个环境变量 `NOTIFY_WEBHOOK`，填你的飞书/企业微信/Discord 机器人地址，新件会即时推给你；
+4. 重新部署一次（改任意文件 push 即可，绑定改完也可以直接 Redeploy）。
+
+绑定之前，接口会返回 503 并提示"受理系统尚未启用，请拨打 12333-HLA 或使用邮箱"——
+即玩家不会看到"提交成功"这种假象。
+
+### 我们怎么读件、怎么答复
+
+1. 读件：Cloudflare 控制台 → Storage & Databases → KV → `HLA_INBOX`，键名以 `sub:` 开头的就是提交记录；
+   或本地 `npx wrangler kv key list --namespace-id <id> --prefix "sub:"`。
+2. 答复：把该键的值里 `status` 改成 `"replied"`、`reply` 写上答复正文、`replied_at` 填时间
+   （`npx wrangler kv key put` 或控制台直接编辑）。改完后，玩家用受理编号在"办理进度查询"页就能看到答复。
+3. 选登：把问与答整理进 `data/replies.json` 并提交，就会出现在答复公示区（先取得来信人同意）。
